@@ -26,4 +26,19 @@ resource "azurerm_public_ip" "workstation" {
 }
 
 
+resource "azurerm_network_interface" "workstation" {
+  name                = "workstation409_z1"
+  location            = "Denmark East"
+  resource_group_name = "denmark-east-rg"
+
+  ip_configuration {
+    name                          = "ipconfig1" # Must match your existing config name
+    subnet_id                     = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default"
+    private_ip_address_allocation = "Static"   # Keep your existing IP settings
+    private_ip_address            = "10.1.0.4" # Your existing private IP
+
+    # ADD THIS LINE TO ATTACH THE PUBLIC IP
+    public_ip_address_id          = azurerm_public_ip.workstation.id
+  }
+}
 
