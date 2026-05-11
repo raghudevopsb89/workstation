@@ -8,8 +8,17 @@ resource "null_resource" "vm_manage" {
 
   provisioner "local-exec" {
     when = "destroy"
-    command = "az vm stop --resource-group denmark-east-rg --name workstation"
+    command = "az vm stop --resource-group denmark-east-rg --name workstation ; az vm deallocate --resource-group denmark-east-rg --name workstation"
   }
 
 }
+
+resource "azurerm_public_ip" "workstation" {
+  name                = "workstation-public-ip"
+  location            = "Denmark East"
+  resource_group_name = "denmark-east-rg"
+  allocation_method   = "Static"
+}
+
+
 
