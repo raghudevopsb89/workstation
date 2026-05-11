@@ -5,6 +5,8 @@ provider "azurerm" {
 
 resource "null_resource" "vm_manage" {
 
+  depends_on = [null_resource.ip_manage]
+
   provisioner "local-exec" {
     #when = "create" # This line is optional as it's the default
     command = "az vm start --resource-group denmark-east-rg --name workstation"
@@ -25,20 +27,18 @@ resource "azurerm_public_ip" "workstation" {
   allocation_method   = "Static"
 }
 
+resource "null_resource" "ip_manage" {
 
-resource "azurerm_network_interface" "workstation" {
-  name                = "workstation409_z1"
-  location            = "Denmark East"
-  resource_group_name = "denmark-east-rg"
+  depends_on = [azurerm_public_ip.workstation]
 
-  ip_configuration {
-    name                          = "ipconfig1" # Must match your existing config name
-    subnet_id                     = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default"
-    private_ip_address_allocation = "Static"   # Keep your existing IP settings
-    private_ip_address            = "10.1.0.4" # Your existing private IP
-
-    # ADD THIS LINE TO ATTACH THE PUBLIC IP
-    public_ip_address_id          = azurerm_public_ip.workstation.id
+  provisioner "local-exec" {
+    command = "az network nic ip-config update --resource-group denmark-east-rg --nic-name workstation409_z1 --name ipconfig1 --public-ip-address workstation-public-ip"
   }
-}
 
+
+  provisioner "local-exec" {
+    when = "destroy"
+    command = "az network nic ip-config update --resource-group denmark-east-rg --nic-name workstation409_z1 --name ipconfig1 --public-ip-address null"
+  }
+
+}
