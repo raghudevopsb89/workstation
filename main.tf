@@ -6,7 +6,7 @@ provider "azurerm" {
 resource "null_resource" "vm_manage" {
 
   provisioner "local-exec" {
-    when = "create" # This line is optional as it's the default
+    #when = "create" # This line is optional as it's the default
     command = "az vm start --resource-group denmark-east-rg --name workstation"
   }
 
