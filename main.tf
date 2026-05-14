@@ -42,3 +42,7 @@ resource "null_resource" "ip_manage" {
   }
 
 }
+
+output "ip" {
+  value = azurerm_public_ip.workstation.ip_address
+}
