@@ -14,7 +14,7 @@ resource "null_resource" "vm_manage" {
 
 
   provisioner "local-exec" {
-    when = "destroy"
+    when    = "destroy"
     command = "az vm stop --resource-group denmark-east-rg --name workstation ; az vm deallocate --resource-group denmark-east-rg --name workstation"
   }
 
@@ -37,7 +37,7 @@ resource "null_resource" "ip_manage" {
 
 
   provisioner "local-exec" {
-    when = "destroy"
+    when    = "destroy"
     command = "az network nic ip-config update --resource-group denmark-east-rg --nic-name workstation409_z1 --name ipconfig1 --public-ip-address null"
   }
 
@@ -78,3 +78,4 @@ resource "azurerm_subnet_nat_gateway_association" "main" {
   subnet_id      = data.azurerm_subnet.default.id
   nat_gateway_id = azurerm_nat_gateway.main.id
 }
+
