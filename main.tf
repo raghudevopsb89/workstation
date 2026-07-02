@@ -9,13 +9,13 @@ resource "null_resource" "vm_manage" {
 
   provisioner "local-exec" {
     #when = "create" # This line is optional as it's the default
-    command = "az vm start --resource-group denmark-east-rg --name workstation"
+    command = "az vm start --resource-group denmark-east-rg --name workstation;az vm start --resource-group denmark-east-rg --name github-runner"
   }
 
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "az vm stop --resource-group denmark-east-rg --name workstation ; az vm deallocate --resource-group denmark-east-rg --name workstation"
+    command = "az vm stop --resource-group denmark-east-rg --name workstation ; az vm deallocate --resource-group denmark-east-rg --name workstation;az vm stop --resource-group denmark-east-rg --name github-runner ; az vm deallocate --resource-group denmark-east-rg --name github-runner"
   }
 
 }
